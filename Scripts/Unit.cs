@@ -5,7 +5,7 @@ public partial class Unit : Node2D
 {
   [Export] Texture2D selectedTexture;
   [Export] Texture2D shadowTexture;
-  [Export] float speed = 100f;
+  [Export] UnitResource unitResource;
   Vector2 movePosition = Vector2.Zero;
   Sprite2D shadow;
   Sprite2D sprite;
@@ -14,6 +14,7 @@ public partial class Unit : Node2D
   {
     shadow = GetNode<Sprite2D>("shadow");
     sprite = GetNode<Sprite2D>("Sprite");
+    sprite.Texture = unitResource.texture;
     shadow.Texture = shadowTexture;
   }
 
@@ -27,7 +28,7 @@ public partial class Unit : Node2D
     }
     else
     {
-      Position += moveDir * speed * (float)delta;
+      Position += moveDir * unitResource.speed * (float)delta;
     }
   }
 

@@ -307,6 +307,9 @@ position = Vector2(96, 92)
 [node name="Unit8" parent="." instance=ExtResource("2_0gw82")]
 position = Vector2(127, 78)
 
+[node name="Unit9" parent="." instance=ExtResource("2_0gw82")]
+position = Vector2(163, 74)
+
 [node name="Area2D" type="Area2D" parent="."]
 unique_name_in_owner = true
 

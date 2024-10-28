@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://rmmdaiyeclur"]
+[gd_scene load_steps=7 format=3 uid="uid://rmmdaiyeclur"]
 
 [ext_resource type="Texture2D" uid="uid://bo85di18aia5b" path="res://Assets/Unit/shadow-circle.png" id="1_bteax"]
 [ext_resource type="Script" path="res://Scripts/Unit.cs" id="1_pqyuq"]
 [ext_resource type="Texture2D" uid="uid://cnkweyg0oww16" path="res://Assets/Unit/white-square.png" id="2_dekva"]
 [ext_resource type="Texture2D" uid="uid://rru65vts5nyx" path="res://Assets/Unit/selection-circle-green.png" id="2_qf8hq"]
+[ext_resource type="Resource" uid="uid://bghgayyacc2qp" path="res://Resources/Units/Infantry.tres" id="4_m8wy8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_47wmq"]
 size = Vector2(6, 6)
@@ -12,6 +13,7 @@ size = Vector2(6, 6)
 script = ExtResource("1_pqyuq")
 selectedTexture = ExtResource("2_qf8hq")
 shadowTexture = ExtResource("1_bteax")
+unitResource = ExtResource("4_m8wy8")
 
 [node name="shadow" type="Sprite2D" parent="."]
 texture_filter = 3

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="UnitResource" load_steps=3 format=3 uid="uid://bghgayyacc2qp"]
+
+[ext_resource type="Script" path="res://Resources/Units/UnitResource.cs" id="1_ynas8"]
+[ext_resource type="Texture2D" uid="uid://cnkweyg0oww16" path="res://Assets/Unit/white-square.png" id="2_hkan0"]
+
+[resource]
+script = ExtResource("1_ynas8")
+texture = ExtResource("2_hkan0")
+speed = 50.0
+damage = 10
+health = 100
+maxHealth = 100
+attackRange = 1
+attackDelay = 1
+defense = 30

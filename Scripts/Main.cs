@@ -1,12 +1,12 @@
 using Godot;
 using System;
 using System.Collections.Generic;
-
+using static BattleRTS.UnitFormations.UnitFormationUtils;
 public partial class Main : Node2D
 {
   private Vector2 startMousePosition;
   private Area2D selectionBox;
-  string formationType = "wedge";
+  string formationType = "square";
   List<Unit> selectedUnits = new();
 
   public override void _Ready()
@@ -17,13 +17,27 @@ public partial class Main : Node2D
 
   public override void _UnhandledInput(InputEvent @event)
   {
-    if (@event is InputEventKey key && key.IsPressed())
+    if (@event is InputEventKey key && key.IsPressed() && !key.IsCommandOrControlPressed())
     {
       switch (key.Keycode)
       {
         case Key.Key1: formationType = "square"; break;
         case Key.Key2: formationType = "circle"; break;
         case Key.Key3: formationType = "wedge"; break;
+        case Key.Key4: formationType = "line"; break;
+        case Key.Key5: formationType = "staggered"; break;
+        case Key.Key6: formationType = "diamond"; break;
+        case Key.Key7: formationType = "hex"; break;
+        case Key.Key8: formationType = "column"; break;
+        case Key.Key9: formationType = "row"; break;
+        case Key.Q: formationType = "circular_wedge"; break;
+        case Key.W: formationType = "t_shape"; break;
+        case Key.E: formationType = "l_shape"; break;
+        case Key.R: formationType = "cross"; break;
+        case Key.T: formationType = "snake"; break;
+        case Key.Y: formationType = "random"; break;
+        case Key.U: formationType = "crescent"; break;
+        default: formationType = "square"; break;
       }
     }
     if (@event is InputEventMouseButton mouseButton && mouseButton.IsPressed() && mouseButton.ButtonIndex == MouseButton.Left)
@@ -86,18 +100,58 @@ public partial class Main : Node2D
         switch (formationType)
         {
           case "square":
-            positionsAvailable = CalculateSquareFormation(GetGlobalMousePosition(), 8f, selectedUnits.Count);
+            positionsAvailable = CalculateSquareFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
             break;
           case "circle":
-            positionsAvailable = CalculateCircleFormation(GetGlobalMousePosition(), 8f, selectedUnits.Count);
+            positionsAvailable = CalculateCircleFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
             break;
           case "wedge":
-            positionsAvailable = CalculateWedgeFormation(GetGlobalMousePosition(), 8f, selectedUnits.Count);
+            positionsAvailable = CalculateWedgeFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "diamond":
+            positionsAvailable = CalculateDiamondFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "line":
+            positionsAvailable = CalculateLineFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "staggered":
+            positionsAvailable = CalculateStaggeredFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "hex":
+            positionsAvailable = CalculateHexagonalFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "column":
+            positionsAvailable = CalculateColumnFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "row":
+            positionsAvailable = CalculateRowFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "circular_wedge":
+            positionsAvailable = CalculateCircularWedgeFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "t_shape":
+            positionsAvailable = CalculateTShapeFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "l_shape":
+            positionsAvailable = CalculateLShapeFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "cross":
+            positionsAvailable = CalculateCrossShapeFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "snake":
+            positionsAvailable = CalculateSnakeFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "random":
+            positionsAvailable = CalculateRandomFormation(GetGlobalMousePosition(), 15f, selectedUnits.Count);
+            break;
+          case "crescent":
+            positionsAvailable = CalculateCrescentShapeFormation(GetGlobalMousePosition(), 20f, 10f, selectedUnits.Count);
             break;
           default:
             positionsAvailable = new List<Vector2>();
             break;
         }
+
         foreach (Unit unit in selectedUnits)
         {
           unit.SetMovePosition(positionsAvailable[selectedUnits.IndexOf(unit)]);
@@ -105,83 +159,6 @@ public partial class Main : Node2D
       }
     }
   }
-
-  /* private List<Vector2> CalculateValidPositions(Vector2 startPosition, float distance, int positionCount)
-  {
-    List<Vector2> positionsAvailable = new List<Vector2>();
-    for (int i = 0; i < positionCount; i++)
-    {
-      // Calculate angle in radians
-      float angle = i * Mathf.Tau / positionCount; // Use Mathf.Tau (2 * PI) for better accuracy
-      Vector2 dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)); // Create direction vector
-      Vector2 position = startPosition + dir * distance; // Calculate the position
-      positionsAvailable.Add(position);
-    }
-
-    return positionsAvailable;
-  }
- */
-  private List<Vector2> CalculateSquareFormation(Vector2 startPosition, float distance, int positionCount)
-  {
-    List<Vector2> positionsAvailable = new List<Vector2>();
-    int sideLength = (int)Mathf.Ceil(Mathf.Sqrt(positionCount)); // Determine the size of the square
-    for (int i = 0; i < sideLength; i++)
-    {
-      for (int j = 0; j < sideLength; j++)
-      {
-        if (positionsAvailable.Count < positionCount)
-        {
-          Vector2 position = startPosition + new Vector2(i * distance, j * distance);
-          positionsAvailable.Add(position);
-        }
-      }
-    }
-    return positionsAvailable;
-  }
-
-  private List<Vector2> CalculateCircleFormation(Vector2 startPosition, float radius, int positionCount)
-  {
-    List<Vector2> positionsAvailable = new List<Vector2>();
-    for (int i = 0; i < positionCount; i++)
-    {
-      float angle = i * (360f / positionCount);
-      Vector2 position = startPosition + new Vector2(Mathf.Cos(Mathf.DegToRad(angle)), Mathf.Sin(Mathf.DegToRad(angle))) * radius;
-      positionsAvailable.Add(position);
-    }
-    return positionsAvailable;
-  }
-
-  private List<Vector2> CalculateWedgeFormation(Vector2 startPosition, float distance, int positionCount)
-  {
-    List<Vector2> positionsAvailable = new List<Vector2>();
-    int rows = 0;
-    int totalUnits = 0;
-
-    // Calculate how many rows we need to fit the positionCount
-    while (totalUnits < positionCount)
-    {
-      rows++;
-      totalUnits += rows; // Each row adds one more unit than the previous row
-    }
-
-    for (int i = 0; i < rows; i++)
-    {
-      for (int j = 0; j <= i; j++)
-      {
-        if (positionsAvailable.Count < positionCount)
-        {
-          // Calculate the offset for each position in the row
-          Vector2 position = startPosition + new Vector2(j * distance - (i * distance) / 2, i * distance);
-          positionsAvailable.Add(position);
-        }
-      }
-    }
-
-    return positionsAvailable;
-  }
-
-
-
 
   private void CheckOverlappingObjects(Rect2 selectionRect)
   {
