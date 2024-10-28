@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://rmmdaiyeclur"]
+
+[ext_resource type="Texture2D" uid="uid://bo85di18aia5b" path="res://Assets/Unit/shadow-circle.png" id="1_bteax"]
+[ext_resource type="Script" path="res://Scripts/Unit.cs" id="1_pqyuq"]
+[ext_resource type="Texture2D" uid="uid://cnkweyg0oww16" path="res://Assets/Unit/white-square.png" id="2_dekva"]
+[ext_resource type="Texture2D" uid="uid://rru65vts5nyx" path="res://Assets/Unit/selection-circle-green.png" id="2_qf8hq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_47wmq"]
+size = Vector2(6, 6)
+
+[node name="Unit" type="Node2D" groups=["selectable"]]
+script = ExtResource("1_pqyuq")
+selectedTexture = ExtResource("2_qf8hq")
+shadowTexture = ExtResource("1_bteax")
+
+[node name="shadow" type="Sprite2D" parent="."]
+texture_filter = 3
+position = Vector2(0, 2)
+texture = ExtResource("1_bteax")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 3
+texture = ExtResource("2_dekva")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("RectangleShape2D_47wmq")
